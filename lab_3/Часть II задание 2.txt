@@ -1,0 +1,138 @@
+import java.util.Arrays;
+import java.util.Random;
+import java.util.Scanner;
+public class Main {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        Random random = new Random();
+
+
+        System.out.print("Введите количество строк (m) для матрицы A: ");
+        int m = scanner.nextInt();
+        System.out.print("Введите количество столбцов (n) для матрицы A: ");
+        int n = scanner.nextInt();
+
+        double[][] matrixA = createRandomMatrix(m, n, random);
+        System.out.println("Матрица A:");
+        printMatrix(matrixA);
+
+        System.out.print("Введите количество строк (p) для матрицы B: ");
+        int p = scanner.nextInt();
+        System.out.print("Введите количество столбцов (q) для матрицы B: ");
+        int q = scanner.nextInt();
+
+        double[][] matrixB = createRandomMatrix(p, q, random);
+        System.out.println("Матрица B:");
+        printMatrix(matrixB);
+
+        // Выбор операции
+        System.out.println("Выберите операцию:");
+        System.out.println("1. Сложение");
+        System.out.println("2. Вычитание");
+        System.out.println("3. Умножение");
+        int choice = scanner.nextInt();
+
+        switch (choice) {
+            case 1:
+                if (m == p && n == q) {
+                    double[][] sum = addMatrices(matrixA, matrixB);
+                    System.out.println("Результат сложения:");
+                    printMatrix(sum);
+                } else {
+                    System.out.println("Размеры матриц не совпадают для сложения.");
+                }
+                break;
+            case 2:
+                if (m == p && n == q) {
+                    double[][] difference = subtractMatrices(matrixA, matrixB);
+                    System.out.println("Результат вычитания:");
+                    printMatrix(difference);
+                } else {
+                    System.out.println("Размеры матриц не совпадают для вычитания.");
+                }
+                break;
+            case 3:
+                if (n == p) {
+                    double[][] product = multiplyMatrices(matrixA, matrixB);
+                    System.out.println("Результат умножения:");
+                    printMatrix(product);
+                } else {
+                    System.out.println("Количество столбцов первой матрицы не равно количеству строк второй матрицы.");
+                }
+                break;
+            default:
+                System.out.println("Некорректный выбор.");
+        }
+
+
+    }
+
+    private static double[][] createRandomMatrix(int rows, int cols, Random random) {
+        double[][] matrix = new double[rows][cols];
+
+
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                matrix[i][j] = random.nextDouble() * 100; // Случайные числа от 0 до 100
+            }
+        }
+
+        return matrix;
+    }
+
+
+    private static double[][] addMatrices(double[][] A, double[][] B) {
+        int rows = A.length;
+        int cols = A[0].length;
+        double[][] result = new double[rows][cols];
+
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                result[i][j] = A[i][j] + B[i][j];
+            }
+        }
+        return result;
+    }
+
+
+    private static double[][] subtractMatrices(double[][] A, double[][] B) {
+        int rows = A.length;
+        int cols = A[0].length;
+        double[][] result = new double[rows][cols];
+
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                result[i][j] = A[i][j] - B[i][j];
+            }
+        }
+        return result;
+    }
+
+
+    private static double[][] multiplyMatrices(double[][] A, double[][] B) {
+        int rowsA = A.length;
+        int colsA = A[0].length;
+        int colsB = B[0].length;
+        double[][] result = new double[rowsA][colsB];
+
+        for (int i = 0; i < rowsA; i++) {
+            for (int j = 0; j < colsB; j++) {
+                for (int k = 0; k < colsA; k++) {
+                    result[i][j] += A[i][k] * B[k][j];
+                }
+            }
+        }
+        return result;
+    }
+
+
+    private static void printMatrix(double[][] matrix) {
+        for (double[] row : matrix) {
+            for (double value : row) {
+                System.out.printf("%.2f ", value);
+            }
+            System.out.println();
+        }
+    }
+
+}

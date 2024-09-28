@@ -1,0 +1,14 @@
+public class Main {
+    public static void main(String[] args) {
+        double[] numbers = {15.2, 25.5, 35.8, 45.1, 55.3};
+        double sum = 0;
+
+        for (double number : numbers) {
+            sum += number;
+        }
+
+        double average = sum / numbers.length;
+
+        System.out.println("Среднее значение: " + average);
+    }
+}
