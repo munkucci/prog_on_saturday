@@ -1,0 +1,47 @@
+import java.awt.Color;
+
+public class Main {
+    public static void main(String[] args) {
+
+    }
+}
+
+class Ellipse {
+
+    // Поля
+    private int x, y;       // Координаты центра эллипса
+    private int a, b;       // Полуоси
+    private Color color;    // Цвет эллипса
+
+
+    // Конструктор
+    public Ellipse(int x, int y, int a, int b, Color color) {
+        this.x = x;
+        this.y = y;
+        this.a = a;
+        this.b = b;
+        this.color = color;
+    }
+
+    // Метод для вычисления площади эллипса
+    public double area() {
+        return Math.PI * a * b;
+    }
+
+    // Метод для перемещения эллипса
+    public void move(int x, int y) {
+        this.x = x;
+        this.y = y;
+    }
+
+
+    // Метод для масштабирования эллипса
+    public void scale(double factor) {
+        if (factor > 0.0) {
+            this.a *= factor;
+            this.b *= factor;
+        }
+    }
+
+
+}

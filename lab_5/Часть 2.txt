@@ -1,0 +1,105 @@
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import javax.imageio.ImageIO;
+
+public class Main {
+    public static void main(String[] args) {
+
+
+        // Создание нескольких эллипсов
+        Ellipse ellipse1 = new Ellipse(100, 100, 50, 30, Color.RED);
+        Ellipse ellipse2 = new Ellipse(300, 200, 80, 40); // По умолчанию черный цвет
+        Ellipse ellipse3 = new Ellipse(150, 150);         // Полуоси по умолчанию
+
+        // Изменяем параметры эллипсов
+        ellipse1.scale(1.5);          // Пропорциональное увеличение
+        ellipse2.scale(2, 1.2);       // Увеличение по осям
+        ellipse3.move(200, 300);      // Перемещение
+
+        // Создание изображения и вывод эллипсов на него
+        int width = 600;
+        int height = 400;
+        BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+        Graphics g = image.getGraphics();
+        g.setColor(Color.WHITE);     // Фон белого цвета
+        g.fillRect(0, 0, width, height);
+
+        // Рисуем эллипсы
+        ellipse1.draw(g);
+        ellipse2.draw(g);
+        ellipse3.draw(g);
+
+        // Сохраняем изображение в файл
+        try {
+            File file = new File("ellipses.png");
+            ImageIO.write(image, "png", file);
+            System.out.println("Изображение сохранено в файл: ellipses.png");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+}
+
+class Ellipse {
+
+    private int x, y;       // Координаты центра эллипса
+    private int a, b;       // Полуоси (a - по оси X, b - по оси Y)
+    private Color color;    // Цвет эллипса
+
+    // Конструктор с полными параметрами
+    public Ellipse(int x, int y, int a, int b, Color color) {
+        this.x = x;
+        this.y = y;
+        this.a = a;
+        this.b = b;
+        this.color = color;
+    }
+
+    // Конструктор без цвета (по умолчанию черный)
+    public Ellipse(int x, int y, int a, int b) {
+        this(x, y, a, b, Color.BLACK);
+    }
+
+    // Конструктор по умолчанию с полуосями 50 и 30
+    public Ellipse(int x, int y) {
+        this(x, y, 50, 30, Color.BLACK);
+    }
+
+    // Метод для расчета площади эллипса
+    public double area() {
+        return Math.PI * a * b;
+    }
+
+    // Метод для перемещения эллипса
+    public void move(int x, int y) {
+        this.x = x;
+        this.y = y;
+    }
+
+    // Пропорциональное масштабирование эллипса
+    public void scale(double factor) {
+        if (factor > 0.0) {
+            this.a *= factor;
+            this.b *= factor;
+        }
+    }
+
+    // Масштабирование по осям отдельно
+    public void scale(double factorA, double factorB) {
+        if (factorA > 0.0) {
+            this.a *= factorA;
+        }
+        if (factorB > 0.0) {
+            this.b *= factorB;
+        }
+    }
+
+    // Метод для рисования эллипса
+    public void draw(Graphics g) {
+        g.setColor(color);
+        g.drawOval(x - a, y - b, 2 * a, 2 * b);  // Рисуем эллипс с учетом его центра и полуосей
+    }
+
+}

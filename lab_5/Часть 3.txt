@@ -1,0 +1,102 @@
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import javax.imageio.ImageIO;
+
+public class Main {
+    public static void main(String[] args) {
+        // Создание объекта с полным набором параметров
+        Product product1 = new Product("Телевизор", 25000.00, 10, "Очень умный LED телевизор.");
+        product1.printInfo(); // Выводим начальную информацию о товаре
+
+        // Обновление цены товара
+        product1.updatePrice(23000.00); // Цена обновится, информация выведется сразу
+
+        // Применение скидки
+        product1.updatePrice(10, true); // Скидка 10%, цена обновится, информация выведется сразу
+
+        // Обновление количества товара
+        product1.updateQuantity(3); // Количество обновится, информация выведется сразу
+
+        // Добавление товара на склад
+        product1.updateQuantity(5, true); // Добавлено 5 единиц, информация выведется сразу
+
+    }
+}
+
+class Product {
+    // Поля
+    String name;
+    double price;
+    int quantity;
+    String description;
+
+    // Конструктор с полным набором параметров
+    public Product(String name, double price, int quantity, String description) {
+        this.name = name;
+        this.price = price;
+        this.quantity = quantity;
+        this.description = description;
+    }
+
+    // Конструктор с минимальным набором параметров
+    public Product(String name, double price) {
+        this(name, price, 0, "Нет описания");
+    }
+
+    // Метод для вывода информации о товаре
+    public void printInfo() {
+        System.out.println("Название товара: " + name);
+        System.out.println("Цена: " + price + " руб.");
+        System.out.println("Количество на складе: " + quantity);
+        System.out.println("Описание: " + description);
+        System.out.println();
+    }
+
+    // Метод для обновления цены товара
+    public void updatePrice(double newPrice) {
+        if (newPrice > 0) {
+            price = newPrice;
+            System.out.println("Цена товара \"" + name + "\" обновлена на: " + newPrice + " руб.");
+            printInfo(); // Выводим обновленную информацию о товаре
+        } else {
+            System.out.println("Неверная цена!");
+        }
+    }
+
+    // Перегрузка метода обновления цены с учетом скидки
+    public void updatePrice(double discount, boolean isDiscount) {
+        if (isDiscount && discount > 0 && discount < 100) {
+            price -= price * (discount / 100);
+            System.out.println("Применена скидка: " + discount + "%, новая цена товара \"" + name + "\": " + price + " руб.");
+            printInfo();
+        } else {
+            System.out.println("Неверное значение скидки!");
+        }
+    }
+
+    // Метод для изменения количества товара
+    public void updateQuantity(int soldQuantity) {
+        if (soldQuantity <= quantity && soldQuantity > 0) {
+            quantity -= soldQuantity;
+            System.out.println("Товар \"" + name + "\" продан в количестве: " + soldQuantity);
+            System.out.println("Остаток на складе: " + quantity);
+            printInfo(); // Выводим обновленную информацию о товаре
+        } else {
+            System.out.println("Недостаточно товара на складе!");
+        }
+    }
+
+    // Перегрузка метода изменения количества товара с добавлением
+    public void updateQuantity(int soldQuantity, boolean isAdding) {
+        if (isAdding) {
+            quantity += soldQuantity;
+            System.out.println("Товар \"" + name + "\" добавлен в количестве: " + soldQuantity);
+            System.out.println("Обновленное количество на складе: " + quantity);
+            printInfo();
+        } else {
+            updateQuantity(soldQuantity); // Если не добавление, используем базовый метод
+        }
+    }
+}
