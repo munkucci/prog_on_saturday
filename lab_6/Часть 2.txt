@@ -1,0 +1,167 @@
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import javax.imageio.ImageIO;
+
+public class Main {
+    public static void main(String[] args) throws IOException {
+        // Создаем несколько объектов классов Line, Rectangle и Ellipse
+        Line line = new Line(10, 20, 150, 80, Color.BLACK);
+        Rectangle rectangle = new Rectangle(60, 50, 200, 100, Color.RED);
+        Ellipse ellipse = new Ellipse(30, 40, 120, 80, Color.BLUE);
+
+        // Создаем изображение
+        int width = 400, height = 300;
+        BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+        Graphics g = image.getGraphics();
+
+        // Вывод площади
+        System.out.println("Площадь линии: " + line.area());
+        System.out.println("Площадь прямоугольника: " + rectangle.area());
+        System.out.println("Площадь эллипса: " + ellipse.area());
+
+
+        // Рисуем фигуры
+        line.draw(g);
+        rectangle.draw(g);
+        ellipse.draw(g);
+
+        // Записываем изображение в файл
+        File outputfile = new File("shapes.png");
+        ImageIO.write(image, "png", outputfile);
+
+        System.out.println("Изображение сохранено в shapes.png");
+    }
+}
+
+
+abstract class Shape {
+    // Закрытые поля
+    private int x, y;
+    private Color color;
+
+    // Конструктор
+    public Shape(int x, int y, Color color) {
+        this.x = x;
+        this.y = y;
+        this.color = color;
+    }
+
+    // Открытые методы доступа (геттеры и сеттеры)
+    public int getX() {
+        return x;
+    }
+
+    public void setX(int x) {
+        this.x = x;
+    }
+
+    public int getY() {
+        return y;
+    }
+
+    public void setY(int y) {
+        this.y = y;
+    }
+
+    public Color getColor() {
+        return color;
+    }
+
+    public void setColor(Color color) {
+        this.color = color;
+    }
+
+    // Абстрактные методы
+    public abstract void draw(Graphics g);  // Метод для отрисовки фигуры
+    public abstract double area();          // Метод для вычисления площади фигуры
+}
+
+
+class Rectangle extends Shape {
+    // Закрытые поля для ширины и высоты
+    private int width, height;
+
+    // Конструктор
+    public Rectangle(int x, int y, int width, int height, Color color) {
+        super(x, y, color);  // Вызов конструктора суперкласса Shape
+        this.width = width;
+        this.height = height;
+    }
+
+    // Открытые методы доступа (геттеры и сеттеры)
+    public int getWidth() {
+        return width;
+    }
+
+    public void setWidth(int width) {
+        this.width = width;
+    }
+
+    public int getHeight() {
+        return height;
+    }
+
+    public void setHeight(int height) {
+        this.height = height;
+    }
+
+    // Переопределение абстрактных методов из класса Shape
+    @Override
+    public void draw(Graphics g) {
+        g.setColor(getColor());
+        g.drawRect(getX(), getY(), width, height);
+    }
+
+    @Override
+    public double area() {
+        return width * height;  // Площадь прямоугольника: ширина * высота
+    }
+}
+
+
+class Line extends Shape {
+    private int x2, y2; // Конечные координаты линии
+
+    public Line(int x, int y, int x2, int y2, Color color) {
+        super(x, y, color); // Вызов конструктора родительского класса
+        this.x2 = x2;
+        this.y2 = y2;
+    }
+
+    @Override
+    public void draw(Graphics g) {
+        g.setColor(getColor());
+        g.drawLine(getX(), getY(), x2, y2);
+    }
+
+
+    @Override
+    public double area() {
+        return 0;
+    }
+
+}
+
+class Ellipse extends Rectangle {
+    public Ellipse(int x, int y, int width, int height, Color color) {
+        super(x, y, width, height, color); // Вызов конструктора родительского класса
+    }
+
+    @Override
+    public void draw(Graphics g) {
+        g.setColor(getColor());
+        g.drawOval(getX(), getY(), getWidth(), getHeight());
+    }
+
+    @Override
+    public double area() {
+        double majorAxis = getWidth() / 2.0;  // Половина ширины (большая ось)
+        double minorAxis = getHeight() / 2.0; // Половина высоты (малая ось)
+        return Math.PI * majorAxis * minorAxis; // Формула площади эллипса
+    }
+}
+
+
+

@@ -1,0 +1,112 @@
+public class Main {
+    public static void main(String[] args) {
+        // Создание объектов с перегрузкой конструкторов
+        Animal dog1 = new Dog("Ужастик", 3, "Золотистый Ретривер");
+        Animal dog2 = new Dog("Камыш", "Бульдог");  // Без указания возраста
+
+        Animal cat1 = new Cat("Феликс", 2, "Черно-белая");
+        Animal cat2 = new Cat("Гав", "Пепельная");  // Без указания возраста
+
+        // Вызов методов
+        System.out.println("Dog 1:");
+        dog1.displayInfo();
+        dog1.makeSound();
+
+        System.out.println();
+
+        System.out.println("Dog 2:");
+        dog2.displayInfo();
+        dog2.makeSound();
+
+        System.out.println();
+
+        System.out.println("Cat 1:");
+        cat1.displayInfo();
+        cat1.makeSound();
+
+        System.out.println();  
+
+        System.out.println("Cat 2:");
+        cat2.displayInfo();
+        cat2.makeSound();
+    }
+}
+
+abstract class Animal {
+    protected String name;
+    protected int age;
+
+    // Конструктор с параметрами
+    public Animal(String name, int age) {
+        this.name = name;
+        this.age = age;
+    }
+
+    // Конструктор по умолчанию (перегрузка конструктора)
+    public Animal(String name) {
+        this(name, 0);  // Устанавливаем возраст по умолчанию 0
+    }
+
+    // Абстрактный метод
+    public abstract void makeSound();
+
+    // Метод для вывода информации о животном
+    public void displayInfo() {
+        System.out.println("Name: " + name + ", Age: " + age);
+    }
+}
+
+
+class Dog extends Animal {
+    private String breed;
+
+    // Конструктор с параметрами
+    public Dog(String name, int age, String breed) {
+        super(name, age);  // Вызов конструктора родительского класса
+        this.breed = breed;
+    }
+
+    // Конструктор с перегрузкой, где возраст по умолчанию = 0
+    public Dog(String name, String breed) {
+        super(name);  // Вызов конструктора родительского класса с именем
+        this.breed = breed;
+    }
+
+    @Override
+    public void makeSound() {
+        System.out.println(name + " рявкнул: Гав-Гав!");
+    }
+
+    @Override
+    public void displayInfo() {
+        super.displayInfo();
+        System.out.println("Breed: " + breed);
+    }
+}
+
+class Cat extends Animal {
+    private String color;
+
+    // Конструктор с параметрами
+    public Cat(String name, int age, String color) {
+        super(name, age);  // Вызов конструктора родительского класса
+        this.color = color;
+    }
+
+    // Конструктор с перегрузкой, где возраст по умолчанию = 0
+    public Cat(String name, String color) {
+        super(name);  // Вызов конструктора родительского класса с именем
+        this.color = color;
+    }
+
+    @Override
+    public void makeSound() {
+        System.out.println(name + " мявкнул: Мяуууу..уу!");
+    }
+
+    @Override
+    public void displayInfo() {
+        super.displayInfo();
+        System.out.println("Color: " + color);
+    }
+}
