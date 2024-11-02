@@ -1,0 +1,88 @@
+import java.util.Arrays;
+
+public class MatrixOperations {
+    // Закрытый конструктор, чтобы предотвратить создание экземпляров класса
+    private MatrixOperations() {}
+
+    // Метод транспонирования матрицы
+    public static double[][] transpose(double[][] matrix) {
+        int rows = matrix.length;
+        int cols = matrix[0].length;
+        double[][] transposed = new double[cols][rows];
+
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                transposed[j][i] = matrix[i][j];
+            }
+        }
+        return transposed;
+    }
+
+    // Метод сложения двух матриц
+    public static double[][] add(double[][] matrixA, double[][] matrixB) {
+        int rows = matrixA.length;
+        int cols = matrixA[0].length;
+
+        if (rows != matrixB.length || cols != matrixB[0].length) {
+            throw new IllegalArgumentException("Матрицы должны быть одного размера для сложения.");
+        }
+
+        double[][] result = new double[rows][cols];
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                result[i][j] = matrixA[i][j] + matrixB[i][j];
+            }
+        }
+        return result;
+    }
+
+    // Метод умножения матрицы на число
+    public static double[][] multiplyByScalar(double[][] matrix, double scalar) {
+        int rows = matrix.length;
+        int cols = matrix[0].length;
+        double[][] result = new double[rows][cols];
+
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                result[i][j] = matrix[i][j] * scalar;
+            }
+        }
+        return result;
+    }
+
+    // Метод для отображения матрицы
+    public static void printMatrix(double[][] matrix) {
+        for (double[] row : matrix) {
+            System.out.println(Arrays.toString(row));
+        }
+        System.out.println();
+    }
+
+    // Пример использования методов класса
+    public static void main(String[] args) {
+        // Пример матриц для операций
+        double[][] matrixA = {
+            {1, 2, 3},
+            {4, 5, 6}
+        };
+        double[][] matrixB = {
+            {7, 8, 9},
+            {10, 11, 12}
+        };
+        
+        // Транспонирование
+        System.out.println("Транспонированная матрица A:");
+        double[][] transposedA = MatrixOperations.transpose(matrixA);
+        MatrixOperations.printMatrix(transposedA);
+
+        // Сложение матриц
+        System.out.println("Сумма матриц A и B:");
+        double[][] sum = MatrixOperations.add(matrixA, matrixB);
+        MatrixOperations.printMatrix(sum);
+
+        // Умножение на скаляр
+        System.out.println("Матрица A, умноженная на скаляр 2:");
+        double[][] scaledA = MatrixOperations.multiplyByScalar(matrixA, 2);
+        MatrixOperations.printMatrix(scaledA);
+    }
+}

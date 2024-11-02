@@ -1,0 +1,54 @@
+class Rectangle extends Shape implements Scalable {
+    private int width, height; // Ширина и высота прямоугольника
+
+    // Конструктор
+    public Rectangle(int x, int y, int width, int height, Color color) {
+        super(x, y, color);
+        this.width = width;
+        this.height = height;
+    }
+
+    // Методы доступа
+    public int getWidth() {
+        return width;
+    }
+    public void setWidth(int width) {
+        this.width = width;
+    }
+
+    public int getHeight() {
+        return height;
+    }
+    public void setHeight(int height) {
+        this.height = height;
+    }
+
+    // Переопределение метода draw
+    @Override
+    public void draw(Graphics g) {
+        g.setColor(getColor());
+        g.fillRect(getX(), getY(), width, height);
+    }
+
+    // Реализация метода scale (пропорциональное масштабирование)
+    @Override
+    public void scale(float factor) {
+        if (factor >= MIN_FACTOR && factor <= MAX_FACTOR) {
+            width = Math.round(width * factor);
+            height = Math.round(height * factor);
+        } else {
+            System.out.println("Коэффициент масштабирования должен быть в пределах от " + MIN_FACTOR + " до " + MAX_FACTOR);
+        }
+    }
+
+    // Реализация метода scale (масштабирование по ширине и высоте отдельно)
+    @Override
+    public void scale(float wFactor, float hFactor) {
+        if (wFactor >= MIN_FACTOR && wFactor <= MAX_FACTOR && hFactor >= MIN_FACTOR && hFactor <= MAX_FACTOR) {
+            width = Math.round(width * wFactor);
+            height = Math.round(height * hFactor);
+        } else {
+            System.out.println("Коэффициенты масштабирования должны быть в пределах от " + MIN_FACTOR + " до " + MAX_FACTOR);
+        }
+    }
+}

@@ -1,0 +1,9 @@
+interface Scalable {
+    // Минимальное и максимальное значение коэффициента масштабирования
+    float MIN_FACTOR = 0.1f;
+    float MAX_FACTOR = 10.0f;
+
+    // Методы для масштабирования
+    void scale(float factor);            // Пропорциональное масштабирование
+    void scale(float wFactor, float hFactor); // Масштабирование отдельно по ширине и высоте
+}

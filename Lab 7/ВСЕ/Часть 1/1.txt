@@ -1,0 +1,38 @@
+import java.awt.*;
+
+abstract class Shape {
+    private int x, y;          // Координаты фигуры
+    private Color color;       // Цвет фигуры
+
+    // Конструктор
+    public Shape(int x, int y, Color color) {
+        this.x = x;
+        this.y = y;
+        this.color = color;
+    }
+
+    // Методы доступа
+    public int getX() {
+        return x;
+    }
+    public void setX(int x) {
+        this.x = x;
+    }
+
+    public int getY() {
+        return y;
+    }
+    public void setY(int y) {
+        this.y = y;
+    }
+
+    public Color getColor() {
+        return color;
+    }
+    public void setColor(Color color) {
+        this.color = color;
+    }
+
+    // Абстрактный метод для рисования
+    public abstract void draw(Graphics g);
+}

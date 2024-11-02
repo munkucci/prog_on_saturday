@@ -1,0 +1,195 @@
+import java.awt.*;
+import javax.swing.*;
+
+// Интерфейс масштабирования
+interface Scalable {
+    float MIN_FACTOR = 0.5f;
+    float MAX_FACTOR = 2.0f;
+
+    void scale(float factor);
+
+    void scale(float wFactor, float hFactor);
+}
+
+// Интерфейс поворота
+interface Rotatable {
+    int MIN_ANGLE = 0;
+    int MAX_ANGLE = 360;
+
+    void rotate(int angle);
+}
+
+// Абстрактный класс Shape
+abstract class Shape {
+    private int x, y;
+    private Color color;
+
+    public Shape(int x, int y, Color color) {
+        this.x = x;
+        this.y = y;
+        this.color = color;
+    }
+
+    public int getX() {
+        return x;
+    }
+
+    public int getY() {
+        return y;
+    }
+
+    public Color getColor() {
+        return color;
+    }
+
+    public abstract void draw(Graphics g);
+}
+
+// Класс Rectangle
+class Rectangle extends Shape implements Scalable {
+    private int width, height;
+
+    public Rectangle(int x, int y, int width, int height, Color color) {
+        super(x, y, color);
+        this.width = width;
+        this.height = height;
+    }
+
+    public static Ellipse toEllipse(Rectangle rect) {
+        return new Ellipse(rect.getX(), rect.getY(), rect.width, rect.height, rect.getColor());
+    }
+
+    @Override
+    public void draw(Graphics g) {
+        g.setColor(getColor());
+        g.fillRect(getX(), getY(), width, height);
+    }
+
+    @Override
+    public void scale(float factor) {
+        if (factor >= MIN_FACTOR && factor <= MAX_FACTOR) {
+            width = Math.round(width * factor);
+            height = Math.round(height * factor);
+        } else {
+            System.out.println("Коэффициент масштабирования должен быть в пределах от " + MIN_FACTOR + " до " + MAX_FACTOR);
+        }
+    }
+
+    @Override
+    public void scale(float wFactor, float hFactor) {
+        if (wFactor >= MIN_FACTOR && wFactor <= MAX_FACTOR && hFactor >= MIN_FACTOR && hFactor <= MAX_FACTOR) {
+            width = Math.round(width * wFactor);
+            height = Math.round(height * hFactor);
+        } else {
+            System.out.println("Коэффициенты масштабирования должны быть в пределах от " + MIN_FACTOR + " до " + MAX_FACTOR);
+        }
+    }
+}
+
+// Класс Ellipse
+class Ellipse extends Shape implements Scalable, Rotatable {
+    private int width, height;
+    private int rotationAngle = 0;
+
+    public Ellipse(int x, int y, int width, int height, Color color) {
+        super(x, y, color);
+        this.width = width;
+        this.height = height;
+    }
+
+    public static Rectangle toRectangle(Ellipse ellipse) {
+        return new Rectangle(ellipse.getX(), ellipse.getY(), ellipse.width, ellipse.height, ellipse.getColor());
+    }
+
+    @Override
+    public void draw(Graphics g) {
+        Graphics2D g2d = (Graphics2D) g;
+        g2d.setColor(getColor());
+
+        g2d.rotate(Math.toRadians(rotationAngle), getX() + width / 2, getY() + height / 2);
+        g2d.fillOval(getX(), getY(), width, height);
+        g2d.rotate(-Math.toRadians(rotationAngle), getX() + width / 2, getY() + height / 2);
+    }
+
+    @Override
+    public void scale(float factor) {
+        if (factor >= MIN_FACTOR && factor <= MAX_FACTOR) {
+            width = Math.round(width * factor);
+            height = Math.round(height * factor);
+        } else {
+            System.out.println("Коэффициент масштабирования должен быть в пределах от " + MIN_FACTOR + " до " + MAX_FACTOR);
+        }
+    }
+
+    @Override
+    public void scale(float wFactor, float hFactor) {
+        if (wFactor >= MIN_FACTOR && wFactor <= MAX_FACTOR && hFactor >= MIN_FACTOR && hFactor <= MAX_FACTOR) {
+            width = Math.round(width * wFactor);
+            height = Math.round(height * hFactor);
+        } else {
+            System.out.println("Коэффициенты масштабирования должны быть в пределах от " + MIN_FACTOR + " до " + MAX_FACTOR);
+        }
+    }
+
+    @Override
+    public void rotate(int angle) {
+        if (angle >= MIN_ANGLE && angle <= MAX_ANGLE) {
+            rotationAngle = angle;
+        } else {
+            System.out.println("Угол поворота должен быть в пределах от " + MIN_ANGLE + " до " + MAX_ANGLE);
+        }
+    }
+}
+
+// Основной класс для отображения фигур
+class ShapeDrawingApp extends JPanel {
+    private Shape[] shapes;
+
+    public ShapeDrawingApp(Shape[] shapes) {
+        this.shapes = shapes;
+    }
+
+    @Override
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        for (Shape shape : shapes) {
+            shape.draw(g);
+        }
+    }
+
+    public static void main(String[] args) {
+        Shape[] shapes = {
+            new Rectangle(50, 50, 100, 50, Color.RED),
+            new Ellipse(200, 50, 100, 50, Color.BLUE)
+        };
+
+        int[] angles = {0, 45, 90};
+        float[] scales = {0.5f, 1.0f, 2.0f};
+
+        for (int angle : angles) {
+            for (float scale : scales) {
+                JFrame frame = new JFrame("Shapes - Поворот: " + angle + "°, Масштаб: " + (int) (scale * 100) + "%");
+                frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                frame.setSize(400, 300);
+
+                // Копируем массив фигур и применяем трансформации
+                Shape[] transformedShapes = {
+                    new Rectangle(50, 50, 100, 50, Color.RED),
+                    new Ellipse(200, 50, 100, 50, Color.BLUE)
+                };
+
+                for (Shape shape : transformedShapes) {
+                    if (shape instanceof Scalable) {
+                        ((Scalable) shape).scale(scale);
+                    }
+                    if (shape instanceof Rotatable) {
+                        ((Rotatable) shape).rotate(angle);
+                    }
+                }
+
+                frame.add(new ShapeDrawingApp(transformedShapes));
+                frame.setVisible(true);
+            }
+        }
+    }
+}
